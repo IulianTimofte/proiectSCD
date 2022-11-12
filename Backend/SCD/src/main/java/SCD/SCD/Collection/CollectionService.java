@@ -56,7 +56,9 @@ public class CollectionService<OkHttpClient> {
     }
 
     public Collection updateCollection(Collection collection){
-
+        if(!collectionRepository.existsById(collection.getId())){
+            throw new RuntimeException("collection not exist");
+        }
         return collectionRepository.save(collection);
     }
 
