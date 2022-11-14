@@ -1,6 +1,7 @@
 package SCD.SCD.Collection;
 
 import org.apache.tomcat.util.json.ParseException;
+import org.json.JSONException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,7 +25,7 @@ public class CollectionController {
     private final CollectionService collectionService;
 
 
-    public CollectionController(CollectionService collectionService) {
+    public CollectionController(CollectionService collectionService) throws IOException, ParseException, InterruptedException {
         this.collectionService = collectionService;
 
     }
@@ -46,7 +53,18 @@ public class CollectionController {
 
     @GetMapping("/get-opensea-collections")
     public String getOpenSeaCollections() throws IOException, InterruptedException, ParseException {
-        return  collectionService.getOpenSeaCollection();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.opensea.io/api/v1/collections?offset=0&limit=300"))
+                .method("GET", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        return response.body();
+    }
+
+    @GetMapping("/get-opensea-collection")
+    public ArrayList<Collection> getOpenSeaCollection() throws IOException, ParseException, InterruptedException {
+        return collectionService.getOpenSeaCollection();
     }
 
 

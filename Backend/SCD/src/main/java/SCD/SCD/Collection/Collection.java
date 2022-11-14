@@ -5,11 +5,12 @@ import javax.persistence.Id;
 
 @Entity
 public class Collection {
-    @Id
+
     private String id;
     private float floorPrice;
     private long totalSupply;
     private int numOwner;
+    @Id
     private String name;
     private float totalVolume;
     private int sevenDaySales;

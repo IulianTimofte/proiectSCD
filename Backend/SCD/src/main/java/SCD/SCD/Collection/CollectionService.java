@@ -1,24 +1,18 @@
 package SCD.SCD.Collection;
 
 
-import org.apache.tomcat.util.json.JSONParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.tomcat.util.json.ParseException;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
-
-import static org.springframework.http.HttpStatus.REQUEST_TIMEOUT;
 
 @Service
 public class CollectionService<OkHttpClient> {
@@ -70,33 +64,26 @@ public class CollectionService<OkHttpClient> {
         return "Collection with id "+id+" has been deleted with success.";
 
     }
-   public String getOpenSeaCollection() throws IOException, InterruptedException, JSONException, ParseException {
-//        OkHttpClient client = new OkHttpClient();
-//
-//        Request request = new Request.Builder()
-//                .url("https://api.opensea.io/api/v1/collections?offset=0&limit=300")
-//                .get()
-//                .addHeader("accept", "application/json")
-//                .build();
-//
-//        Response response = client.newCall(request).execute();
-
+   public ArrayList<Collection> getOpenSeaCollection() throws IOException, InterruptedException, JSONException, ParseException {
        HttpRequest request = HttpRequest.newBuilder()
                .uri(URI.create("https://api.opensea.io/api/v1/collections?offset=0&limit=300"))
                .method("GET", HttpRequest.BodyPublishers.noBody())
                .build();
 
        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-       JSONParser parser = new JSONParser();
-       JSONObject json = (JSONObject) parser.parse(response.body());
-     //  JSONObject yourJsonObject = (JSONObject) new JSONParser(response.body()).parse();
-       JSONObject data = (JSONObject) json.get("collections");
-       JSONObject data0 = (JSONObject) data.get(String.valueOf(0));
-       JSONObject another_data = (JSONObject) data0.get("stats");
+       OpenSeaCollections openSeaCollections = new ObjectMapper().readValue(response.body(), OpenSeaCollections.class);
+       System.out.println(openSeaCollections.getCollections().get(0).getStats().getFloor_price());
+       System.out.println(openSeaCollections.getCollections().get(0).getStats().getTotal_volume());
+       System.out.println(openSeaCollections.getCollections().get(0).getStats().getTotal_supply());
+       System.out.println(openSeaCollections.getCollections().get(0).getStats().getNum_owners());
+       System.out.println(openSeaCollections.getCollections().get(0).getStats().getSeven_day_sales());
+       System.out.println(openSeaCollections.getCollections().get(0).getStats().getName());
+       ArrayList<Collection> collections = new ArrayList<>();
+       openSeaCollections.getCollections().forEach(openSeaCollection -> collections.add(CollectionMapper.toCollection(openSeaCollection)));
+       collections.forEach(collectionRepository::save);
+       return collections;
 
-       String required_field1 = another_data.get("floor_price").toString();
-       String required_field2 = another_data.get("required_field2").toString();
-       return required_field1;
+
     }
 
 
