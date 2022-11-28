@@ -1,16 +1,16 @@
 package SCD.SCD.Collection;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Collection {
-
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     private float floorPrice;
     private long totalSupply;
     private int numOwner;
-    @Id
+    @Column(unique=true)
     private String name;
     private float totalVolume;
     private int sevenDaySales;
@@ -18,7 +18,7 @@ public class Collection {
 
     }
 
-    public Collection(String id, float floorPrice, long totalSupply, int numOwner, String name, float totalVolume, int sevenDaySales) {
+    public Collection(Long id, float floorPrice, long totalSupply, int numOwner, String name, float totalVolume, int sevenDaySales) {
         this.id = id;
         this.floorPrice = floorPrice;
         this.totalSupply = totalSupply;
@@ -28,11 +28,11 @@ public class Collection {
         this.sevenDaySales = sevenDaySales;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -50,14 +50,14 @@ public class CollectionService<OkHttpClient> {
     }
 
     public Collection updateCollection(Collection collection){
-        if(!collectionRepository.existsById(collection.getId())){
+        if(!collectionRepository.findById(collection.getId())){
             throw new RuntimeException("collection not exist");
         }
         return collectionRepository.save(collection);
     }
 
-    public String deleteCollection(String id )  {
-        if(!collectionRepository.existsById(id)){
+    public String deleteCollection(Long id )  {
+        if(!collectionRepository.findById(id)){
             throw new RuntimeException("collection not exist");
         }
         collectionRepository.deleteById(id);
@@ -77,7 +77,7 @@ public class CollectionService<OkHttpClient> {
        System.out.println(openSeaCollections.getCollections().get(0).getStats().getTotal_supply());
        System.out.println(openSeaCollections.getCollections().get(0).getStats().getNum_owners());
        System.out.println(openSeaCollections.getCollections().get(0).getStats().getSeven_day_sales());
-       System.out.println(openSeaCollections.getCollections().get(0).getStats().getName());
+       System.out.println(openSeaCollections.getCollections().get(0).getName());
        ArrayList<Collection> collections = new ArrayList<>();
        openSeaCollections.getCollections().forEach(openSeaCollection -> collections.add(CollectionMapper.toCollection(openSeaCollection)));
        collections.forEach(collectionRepository::save);

@@ -8,7 +8,7 @@ public class CollectionMapper {
         collection.setTotalSupply(openSeaCollection.getStats().getTotal_supply());
         collection.setSevenDaySales(openSeaCollection.getStats().getSeven_day_sales());
         collection.setTotalVolume(openSeaCollection.getStats().getTotal_volume());
-        collection.setName(openSeaCollection.getStats().getName());
+        collection.setName(openSeaCollection.getName());
         return  collection;
     }
 }

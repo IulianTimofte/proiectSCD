@@ -11,15 +11,9 @@ public class OpenSeaStats {
     public Integer num_owners;
     public Integer total_volume;
     public Integer seven_day_sales;
-    public String name;
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+
 
     public Integer getTotal_supply() {
         return total_supply;
