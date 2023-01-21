@@ -4,13 +4,13 @@ import javax.persistence.*;
 
 @Entity
 public class Collection {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
+
     private Long id;
     private float floorPrice;
     private long totalSupply;
     private int numOwner;
-    @Column(unique=true)
+    @Id
     private String name;
     private float totalVolume;
     private int sevenDaySales;

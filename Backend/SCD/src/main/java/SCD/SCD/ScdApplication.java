@@ -1,10 +1,11 @@
 package SCD.SCD;
 
+import SCD.SCD.Collection.MailService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableScheduling
@@ -13,11 +14,19 @@ public class ScdApplication {
 	public RestTemplate getRestTemplate(){
 		return new RestTemplate();
 	}*/
+	private MailService senderService;
 
-
+	public ScdApplication(MailService senderService) {
+		this.senderService = senderService;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(ScdApplication.class, args);
+	}
+
+	@EventListener(ApplicationReadyEvent.class)
+	public void sendMail(){
+		senderService.sendEmail("iuliantimofte2@gmail.com","NFT","this is body");
 	}
 
 }
